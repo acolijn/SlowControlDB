@@ -8,17 +8,29 @@ class MongoDBHandler:
         self.client = MongoClient(uri)
         self.db = self.client.get_default_database()
         self.collection = self.db[collection_name]
-        self.timestamp_new = None
+        self.latest_timestamp = None
 
     def store(self, data_entry):
-        data_dict = data_entry.get_dict()
-        self.timestamp_new = data_dict['timestamp']
-        self.collection.insert_one(data_dict)
+        """Stores a data entry in the database.
 
-        logging.info(f"Stored data entry: {data_dict}")
+        Args:
+            data_entry (): DataEntry object to store in the database.
+
+        """
+        data_dict = data_entry.get_dict()
+
+        # If the latest_timestamp is not set or if the new entry's timestamp 
+        # is different from the latest known timestamp, then insert the new entry.
+        if not self.latest_timestamp or self.latest_timestamp != data_dict['timestamp']:
+            self.collection.insert_one(data_dict)
+            logging.info(f"Stored data entry: {data_dict}")
+            # Update the latest_timestamp with the timestamp of the new entry.
+            self.latest_timestamp = data_dict['timestamp']
+        else:
+            logging.info(f"Skipped identical data entry: {data_dict}")
 
     def delete_old_entries(self):
-        cutoff_time = self.timestamp_new - timedelta(hours=24)
+        cutoff_time = self.latest_timestamp - timedelta(hours=24)
         self.collection.delete_many({
             'timestamp': {'$lt': cutoff_time}
         })
