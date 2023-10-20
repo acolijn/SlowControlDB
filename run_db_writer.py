@@ -9,8 +9,7 @@ print("Initializing DataFileReader...")
 reader = DataFileReader(header=data_element_names)
 
 print("Starting loop...")
-for i in range(120):
-    print(f"Loop {i}")
+while True:
     # Read the latest data from the data file:
     latest_data = reader.read_entry()
     # MongoDB writing

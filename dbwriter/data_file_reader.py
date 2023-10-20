@@ -1,4 +1,5 @@
 import os
+import logging
 from datetime import datetime
 from dbwriter.settings import FILE_PATH
 
@@ -35,7 +36,7 @@ class DataFileReader:
         with open(header_file, 'r') as file:
             """The header is the last line of the file."""	
             header_line = file.readlines()[-1]
-            print(header_line.strip().split('\t'))
+            logging.info(header_line.strip().split('\t'))
             return [key.replace(" ", "").replace("(", "_").replace(")", "") for key in header_line.strip().split('\t')]
 
     def read_entry(self):
@@ -58,14 +59,14 @@ class DataFileReader:
             if "," in values[i]:
                 values[i] = float(values[i].replace(",", "."))
                 
-        print(len(self.header), len(values))
-
         # if the number of values is not equal to the number of keys in the header. Then I know
         # that the HV data is missing - so either 8 or 16 less elements in teh data. I want to add -999.0 as a placeholder.
         # the entries need to be added just before the last two elements in the list.
 
         if len(self.header) != len(values):
             print("Missing HV data - adding -999.0 as placeholder")
+            logging.info("Missing HV data - adding -999.0 as placeholder")
+            
             n_patch = 0
             if len(self.header) == len(values) + 8:
                 # add 8 entries
@@ -76,7 +77,8 @@ class DataFileReader:
             else:
                 print("Something is wrong with the data - not adding -999.0 as placeholder")
                 # throw an exception
-                raise Exception("Missing HV data - not adding -999.0 as placeholder")
+                logging.info(f"MissingHV data inserted as -999")
+
             
             # add the values
             for i in range(n_patch):
