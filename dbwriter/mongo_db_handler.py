@@ -30,11 +30,11 @@ class MongoDBHandler:
             logging.info(f"Skipped identical data entry: {data_dict}")
 
     def delete_old_entries(self):
-        cutoff_time = self.latest_timestamp - timedelta(hours=72)
+        cutoff_time = self.latest_timestamp - timedelta(hours=168)  # 7 days ago
         self.collection.delete_many({
             'timestamp': {'$lt': cutoff_time}
         })
-        logging.info("Deleted entries older than 24 hours.")
-
+        logging.info("Deleted entries older than 7 days.")
+        
     def close(self):
         self.client.close()

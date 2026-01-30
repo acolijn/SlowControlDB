@@ -1,2 +1,3 @@
 venv_dbwriter
 dbwriter/settings.ini
+dbwriter/__pycache__/mongo_db_handler.cpython-312.pyc
