@@ -74,7 +74,7 @@ class MongoDBHandler:
             return False
 
         try:
-            cutoff_time = self.latest_timestamp - timedelta(hours=168)  # 7 days ago
+            cutoff_time = self.latest_timestamp - timedelta(hours=672)  # 7 days ago
             self.collection.delete_many({
                 'timestamp': {'$lt': cutoff_time}
             })
