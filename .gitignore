@@ -3,3 +3,4 @@ dbwriter/settings.ini
 dbwriter/__pycache__/mongo_db_handler.cpython-312.pyc
 dbwriter/__pycache__/mongo_db_handler.cpython-312.pyc
 logs/db_writer.log
+dbwriter/__pycache__/mongo_db_handler.cpython-312.pyc
